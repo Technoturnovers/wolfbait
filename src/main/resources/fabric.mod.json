@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "wolfbait",
+  "version": "${version}",
+  "name": "WolfBait",
+  "description": "Use 'scented' arrows to sic wolves on your foes.",
+  "authors": [
+    "Technoturnovers"
+  ],
+  "contributors": [],
+  "contact": {},
+  "license": "LGPL-3.0",
+  "icon": "assets/wolfbait/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "technoturnovers.wolfbait.WolfBait"
+    ],
+    "client": [
+      "technoturnovers.wolfbait.WolfBaitClient"
+    ],
+    "server": []
+  },
+  "mixins": [
+    "wolfbait.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.2",
+    "fabric": "*"
+  }
+}
