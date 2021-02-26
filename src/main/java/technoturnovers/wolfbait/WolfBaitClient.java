@@ -1,8 +1,8 @@
 package technoturnovers.wolfbait;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.ArrowEntityRenderer;
 import net.minecraft.entity.Entity;
@@ -17,14 +17,14 @@ public class WolfBaitClient implements ClientModInitializer {
     public static final Identifier PacketID = new Identifier(WolfBait.MOD_ID, "spawn_packet");
 
     public void receiveEntityPacket() {
-        ClientSidePacketRegistry.INSTANCE.register(PacketID, (ctx, byteBuf) -> {
+        ClientPlayNetworking.registerGlobalReceiver(PacketID, (ctx, handler, byteBuf, responseSender) -> {
             EntityType<?> et = Registry.ENTITY_TYPE.get(byteBuf.readVarInt());
             UUID uuid = byteBuf.readUuid();
             int entityId = byteBuf.readVarInt();
             Vec3d pos = EntitySpawnPacket.PacketBufUtil.readVec3d(byteBuf);
             float pitch = EntitySpawnPacket.PacketBufUtil.readAngle(byteBuf);
             float yaw = EntitySpawnPacket.PacketBufUtil.readAngle(byteBuf);
-            ctx.getTaskQueue().execute(() -> {
+            ctx.execute(() -> {
                 if (MinecraftClient.getInstance().world == null)
                     throw new IllegalStateException("Tried to spawn entity in a null world!");
                 Entity e = et.create(MinecraftClient.getInstance().world);

@@ -1,5 +1,7 @@
 package technoturnovers.wolfbait;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -27,7 +29,7 @@ public class WolfArrowEntity extends ArrowEntity {
         super(world, owner);
     }
 
-    @Override
+    @Environment(EnvType.CLIENT)
     public Packet createSpawnPacket() {
         return EntitySpawnPacket.create(this, WolfBaitClient.PacketID);
     }
@@ -40,7 +42,8 @@ public class WolfArrowEntity extends ArrowEntity {
                 (double)TargetPos.getX() - 32, (double)TargetPos.getY() - 32, (double)TargetPos.getZ() - 32,
                 (double)TargetPos.getX() + 32, (double)TargetPos.getY() + 32, (double)TargetPos.getZ() + 32
         );
-        List<WolfEntity> WolvesInRange = world.getEntitiesByType(EntityType.WOLF, AggroRange, TargetNotSelf);
+        Predicate<?> TargetInRange = (Entity x) -> AggroRange.contains(x.getPos());
+        List<WolfEntity> WolvesInRange = world.getEntitiesByType(EntityType.WOLF, AggroRange, TargetNotSelf.and(TargetInRange));
         for (WolfEntity doggo : WolvesInRange) {
             doggo.setAngryAt(target.getUuid());
             doggo.setAttacker(target);

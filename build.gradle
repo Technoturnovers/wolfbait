@@ -76,4 +76,8 @@ publishing {
 		// uncomment to publish to the local maven
 		// mavenLocal()
 	}
+
+	runServer {
+		standardInput = System.in
+	}
 }
